@@ -21,17 +21,17 @@ public class FilmQueryApp {
 
 	private void test() {
 //    Film film = db.findFilmById(1);
-		List<Film> films = ((DatabaseAccessorObject)db).findFilmsByActorId(5);
+		List<Film> films = ((DatabaseAccessorObject) db).findFilmsByActorId(6);
 		for (Film film : films) {
 			System.out.println(film);
 		}
-//		List<Actor> actors = ((DatabaseAccessorObject)db).findActorsByFilmId(970);
-//		for (Actor actor : actors) {
-//			System.out.println(actor);
-//		}
-//		System.out.println(((DatabaseAccessorObject)db).findActorById(138));
-//		System.out.println(((DatabaseAccessorObject)db).findFilmById(1).getActors());
-//		System.out.println(films);
+		List<Actor> actors = ((DatabaseAccessorObject) db).findActorsByFilmId(970);
+		for (Actor actor : actors) {
+			System.out.println(actor);
+		}
+		System.out.println(((DatabaseAccessorObject) db).findActorById(138));
+		System.out.println(((DatabaseAccessorObject) db).findFilmById(1).getActors());
+		System.out.println(films);
 	}
 
 	private void launch() {

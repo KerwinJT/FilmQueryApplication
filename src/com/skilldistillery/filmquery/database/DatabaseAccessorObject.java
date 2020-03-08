@@ -32,7 +32,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		try {
 			String sql = "select * from film where film.id = ?";
-			PreparedStatement stmt = openAccess(sql);
+			String user = "student";
+			String pass = "student";
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs2 = stmt.executeQuery();
 			while (rs2.next() && !rs2.wasNull()) {
@@ -49,13 +52,14 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				String features = rs2.getString("special_features");
 				film = new Film(filmNumber, title, desc, releaseYear, langId, rentDur, rate, length, repCost, rating,
 						features);
-				if (filmNumber != null) {
-					List<Actor> actors = findActorsByFilmId(filmNumber);
-					film.setActors(actors);
-				}
+
+				List<Actor> actors = findActorsByFilmId(filmNumber);
+				film.setActors(actors);
+
 			}
 		} catch (SQLException e) {
-			System.out.println("Could not find relevent data.");
+			System.out.println("findFilmById");
+			System.out.println(e);
 
 		}
 
@@ -68,7 +72,10 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		try {
 
 			String sql = "select actor.first_name, actor.last_name, actor.id from actor where actor.id = ?";
-			PreparedStatement stmt = openAccess(sql);
+			String user = "student";
+			String pass = "student";
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, actorId);
 			ResultSet rs1 = stmt.executeQuery();
 			while (rs1.next() && !(rs1.wasNull())) {
@@ -78,9 +85,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				actor = new Actor(actorNumber, actorFirstName, actorLastName);
 
 			}
+			rs1.close();
+			stmt.close();
+			conn.close();
 
 		} catch (SQLException e) {
-			System.out.println("Could not find relevent data.");
+			System.out.println("findActorById");
+			System.out.println(e);
 			return null;
 
 		}
@@ -94,65 +105,57 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 		try {
 			String sql = "select actor.id from actor join film_actor on actor.id = film_actor.actor_id join film on film.id = film_actor.film_id where film.id = ?";
-			PreparedStatement stmt = openAccess(sql);
+			String user = "student";
+			String pass = "student";
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs3 = stmt.executeQuery();
 			while (rs3.next() && !(rs3.wasNull())) {
-				if (findActorById(rs3.getInt("id")) != null) {
-					actors.add(findActorById(rs3.getInt("id")));
-				}
+				actors.add(findActorById(rs3.getInt("id")));
+
 			}
+//			rs3.close();
+//			stmt.close();
+//			conn.close();
 
 		} catch (SQLException e) {
-			System.out.println("Could not find relevent data.");
+			System.out.println("findActorsByFilmId");
+			System.out.println(e);
 		}
 		return actors;
 	}
 
 	public List<Film> findFilmsByActorId(int actorId) {
 		List<Film> films = new ArrayList<>();
-		try {
-			String sql = "SELECT film.id, film.title, film.description, film.release_year, "
-					+ "film.language_id, film.rental_duration, film.rental_rate, film.length, "
-					+ "film.replacement_cost, film.rating, film.special_features" + " FROM film JOIN film_actor "
-					+ "ON film.id = film_actor.film_id " + "WHERE film_actor.actor_id = ?";
+		String sql = "SELECT film.id, film.title, film.description, film.release_year, "
+				+ "film.language_id, film.rental_duration, film.rental_rate, film.length, "
+				+ "film.replacement_cost, film.rating, film.special_features" + " FROM film JOIN film_actor "
+				+ "ON film.id = film_actor.film_id " + "WHERE film_actor.actor_id = ?";
 
-			PreparedStatement stmt = openAccess(sql);
-			stmt.setInt(1, actorId);
-			ResultSet rs4 = stmt.executeQuery();
-			System.out.println("Going into while");
-			while (rs4.next()) {
-				if (!(rs4.wasNull())) {
-					System.out.println("Trying to find film");
-					System.out.println(rs4.getInt("id"));
-					System.out.println(rs4.wasNull());
-					System.out.println(films.add(findFilmById(rs4.getInt("id"))));
-					System.out.println("After findFilmById");
-					System.out.println();
-				}
-
-			}
-
-		} catch (SQLException e) {
-			System.out.println("Could not find relevent data.");
-
-		}
-		return films;
-	}
-
-	private PreparedStatement openAccess(String sql) {
 		try {
 			String user = "student";
 			String pass = "student";
 			Connection conn = DriverManager.getConnection(URL, user, pass);
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			return stmt;
-		} catch (SQLException e) {
-			System.out.println("Connection to database failed. Please check connection.");
-			;
-		}
-		return null;
+			stmt.setInt(1, actorId);
+			ResultSet rs4 = stmt.executeQuery();
+			while (rs4.next()) {
+				films.add(findFilmById(rs4.getInt("id")));
 
+			}
+//			rs4.close();
+//			stmt.close();
+//			conn.close();
+		} catch (SQLException e) {
+			System.out.println("findFilmsByActorId");
+			System.out.println(e);
+
+		} catch (NullPointerException e) {
+			System.out.println("NullPointer in findFilmsByActorId");
+
+		}
+		return films;
 	}
 
 }

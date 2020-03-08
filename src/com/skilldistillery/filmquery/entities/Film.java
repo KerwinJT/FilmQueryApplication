@@ -40,6 +40,19 @@ public class Film {
 	private double replacementCost;
 	private String rating;
 	private String specialFeatures;
+	private String langauge;
+
+	public String getLangauge() {
+		return langauge;
+	}
+
+	public void setLangauge(String langauge) {
+		this.langauge = langauge;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public int getId() {
 		return id;
@@ -133,8 +146,10 @@ public class Film {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((actors == null) ? 0 : actors.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((langauge == null) ? 0 : langauge.hashCode());
 		result = prime * result + languageID;
 		result = prime * result + ((length == null) ? 0 : length.hashCode());
 		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
@@ -159,12 +174,25 @@ public class Film {
 		if (getClass() != obj.getClass())
 			return false;
 		Film other = (Film) obj;
+		if (actors == null) {
+			if (other.actors != null)
+				return false;
+		} else if (!actors.equals(other.actors))
+			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (langauge == null) {
+			if (other.langauge != null)
+				return false;
+		} else if (!langauge.equals(other.langauge))
 			return false;
 		if (languageID != other.languageID)
 			return false;
@@ -205,7 +233,9 @@ public class Film {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Film [id=");
+		builder.append("Filmx [actors=");
+		builder.append(actors);
+		builder.append(", id=");
 		builder.append(id);
 		builder.append(", title=");
 		builder.append(title);
@@ -227,6 +257,8 @@ public class Film {
 		builder.append(rating);
 		builder.append(", specialFeatures=");
 		builder.append(specialFeatures);
+		builder.append(", langauge=");
+		builder.append(langauge);
 		builder.append("]");
 		return builder.toString();
 	}

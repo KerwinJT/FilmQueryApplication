@@ -81,9 +81,30 @@ public class FilmQueryApp {
 		}
 		if (film != null) {
 			displayFilm(film);
+			int choice = 0;
+			System.out.println("Would you lke to see additional information?");
+			System.out.print("1) For additional information: ");
+			try {
+				choice = keyboard.nextInt();
+				
+			} catch (InputMismatchException e) {
+				System.out.println("Invalid entry.");
+				// TODO: handle exception
+			}
+			keyboard.nextLine();
+			switch (choice) {
+			case 1:
+				System.out.println(film.toString());
+				break;
+			default:
+				System.out.println("Return to main menu.");
+			}
 		} else {
 			System.out.println("\nFilm not found.\n");
 		}
+		
+		
+		
 	}
 
 	private void menuChoiceKeywordSearch(Scanner keyboard) {
@@ -106,6 +127,7 @@ public class FilmQueryApp {
 		}
 
 	}
+
 	private void displayFilm(Film film) {
 		System.out.println("\nFilm title: " + film.getTitle());
 		System.out.println("Year filmed: " + film.getYear());

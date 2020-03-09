@@ -233,7 +233,7 @@ public class Film {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Filmx [actors=");
+		builder.append("Film [actors=");
 		builder.append(actors);
 		builder.append(", id=");
 		builder.append(id);
